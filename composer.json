@@ -1,0 +1,16 @@
+{
+    "name": "zambodaniel/mnb-php-client",
+    "description": "Package for getting exchange rates from Hungarian National Bank's API",
+    "require": {
+        "php": ">=7.1",
+        "ext-simplexml": "*",
+        "ext-soap": "*",
+        "nesbot/carbon": "^1.33",
+        "wsdltophp/packagebase": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MnbClient\\": "./src/"
+        }
+    }
+}
