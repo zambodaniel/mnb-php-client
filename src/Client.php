@@ -37,7 +37,7 @@ class Client extends AbstractSoapClientBase
     public function __construct(array $wsdlOptions = [])
     {
         $wsdlOptions = array_merge($wsdlOptions, [
-            \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_URL => 'http://www.mnb.hu/arfolyamok.asmx?singleWsdl',
+            \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_URL => 'https://www.mnb.hu/arfolyamok.asmx?singleWsdl',
             \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => \MnbClient\ClassMap::get(),
         ]);
         parent::__construct($wsdlOptions);
@@ -135,8 +135,7 @@ class Client extends AbstractSoapClientBase
             $endDate ? $endDate->toDateString() : null,
             implode(',', $currencies));
         try {
-            $sc = $this->getSoapClient();
-            return new GetExchangeRatesResponse($sc->GetExchangeRates($getExchangeRates));
+            return new GetExchangeRatesResponse($this->getSoapClient()->GetExchangeRates($getExchangeRates));
         } catch (\SoapFault $soapFault) {
             throw new MnbException($soapFault);
         } catch (\Throwable $exception) {
