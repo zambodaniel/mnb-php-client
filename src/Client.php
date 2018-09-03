@@ -6,7 +6,7 @@
  * Time: 13:04
  */
 
-namespace MnbClient\Client;
+namespace MnbClient;
 
 use Carbon\Carbon;
 use MnbClient\Exceptions\ClientException;
@@ -29,6 +29,20 @@ use \WsdlToPhp\PackageBase\AbstractSoapClientBase;
  */
 class Client extends AbstractSoapClientBase
 {
+
+    /**
+     * Client constructor.
+     * @param array $wsdlOptions
+     */
+    public function __construct(array $wsdlOptions = [])
+    {
+        $wsdlOptions = array_merge($wsdlOptions, [
+            \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_URL => 'http://www.mnb.hu/arfolyamok.asmx?singleWsdl',
+            \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => \MnbClient\ClassMap::get(),
+        ]);
+        parent::__construct($wsdlOptions);
+    }
+
     /**
      * Method to call the operation originally named GetCurrencies
      * @return GetCurrenciesResponse
@@ -121,7 +135,8 @@ class Client extends AbstractSoapClientBase
             $endDate ? $endDate->toDateString() : null,
             implode(',', $currencies));
         try {
-            return new GetExchangeRatesResponse($this->getSoapClient()->GetExchangeRates($getExchangeRates));
+            $sc = $this->getSoapClient();
+            return new GetExchangeRatesResponse($sc->GetExchangeRates($getExchangeRates));
         } catch (\SoapFault $soapFault) {
             throw new MnbException($soapFault);
         } catch (\Throwable $exception) {
